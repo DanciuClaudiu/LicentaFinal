@@ -1,0 +1,116 @@
+﻿@model IEnumerable<LicentaFinal.Models.Cart>;
+@{
+    ViewData["Title"] = "Cart Page";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+</head>
+<body>
+    <div>
+        <input id="myInput" name="myInstrument" type="text" placeholder="Search.." class="search-box" onkeyup="searchFunction(this.value)">
+    </div>
+    <div class="admin-items-list">
+
+        @foreach (var instrument in Model)
+        {
+            
+            <div class="admin-item" style="display: block">
+
+                <div class="admin-item-details">
+
+                    <div>
+                        <h5>@Html.DisplayFor(modelItem => instrument.InstrumentName)</h5>
+                        
+                        $@Html.DisplayFor(modelItem => instrument.InstrumentPrice)
+                    </div>
+                    <input type="button" id="@instrument.Id" onclick="deleteInstrument(this.id)" value="Remove" class="item-button-remove" style="margin-top: 5%; " />
+
+                    <div style="margin-bottom: 3%">
+
+                    </div>
+
+
+
+                </div>
+
+
+
+            </div>
+        }
+        <input type="submit" value="Check Out" onclick="CheckOut()" class="item-button" style="margin-bottom: 5%;" />
+
+    </div>
+
+    <button onclick="topFunction()" id="up-botton" title="Go to top">Top</button>
+
+
+
+
+
+
+    <script>
+
+        function CheckOut() {
+            $.post("/CartPage/CheckOut",
+                function (data, status) {
+                    if (status == "success") {
+                        console.log("done");
+
+                    }
+                });
+
+            Swal.fire({
+                title: 'Success!',
+                text: "Your order has been sent.",
+                type: 'success',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    window.location.pathname = "UserPage/UserPage"
+                }
+            })
+
+            
+            
+        }
+
+        window.onscroll = function () { scrollFunction() };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                document.getElementById("up-botton").style.display = "block";
+            } else {
+                document.getElementById("up-botton").style.display = "none";
+            }
+        }
+
+        function topFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+
+
+
+        function deleteInstrument(id) {
+            var parameters = {
+                id: id
+            };
+
+            $.post("@Url.Action("DeleteInstrument", "CartPage")", parameters)
+                .done(function () {
+                    console.log('post done');
+                    location.reload();
+                });
+        }
+
+
+    </script>
+
+
+</body>
+</html>

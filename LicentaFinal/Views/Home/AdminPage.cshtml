@@ -1,0 +1,308 @@
+﻿@model IEnumerable<LicentaFinal.Models.Instrument>;
+@{
+    ViewData["Title"] = "Admin Page";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+<body>
+    <div>
+        <input id="myInput" name="myInstrument" type="text" placeholder="Search.." class="search-box" onkeyup="searchFunction(this.value)">
+    </div>
+
+
+
+    <a asp-area="" asp-controller="AddItem" asp-action="AddItem">Add</a>
+
+    <div class="admin-items-list">
+
+
+
+
+        @foreach (var instrument in Model)
+        {
+            <div class="admin-item" id="@instrument.Name" style="display: block">
+
+                <div class="admin-item-details">
+
+                    <div>
+                        <label>Id: @instrument.Id</label>
+                    </div>
+
+                    <div>
+                        <label>Name: @instrument.Name</label>
+                        <input type="text" id="updateName @instrument.Id" style="visibility: hidden" />
+
+                    </div>
+
+                    <div>
+                        <label>Price: $@instrument.Price</label>
+                        <input type="text" id="updatePrice @instrument.Id" style="visibility: hidden" />
+                    </div>
+
+                    <div>
+                        <label>Quantity: @instrument.Quantity</label>
+                        <input type="text" id="updateQuantity @instrument.Id" style="visibility: hidden" />
+                    </div>
+
+                    <div style="margin-bottom: 3%">
+                        <label>Type: @instrument.Type</label>
+                        <input type="text" id="updateType @instrument.Id" style="visibility: hidden" />
+                    </div>
+
+                    <div>
+                        <input type="button" id="@instrument.Id" onclick="deleteInstrument(this.id)" value="Remove" class="item-button-remove" style="margin-bottom: 5%; " />
+                        <input type="button" value="Edit" id="edit @instrument.Id" onclick="reveal(this.id)" class="item-button" style="margin-left: 10px" />
+                        <input type="button" value="Confirm" id="confirm @instrument.Id" onclick="updateInstrument(this.id)" class="item-button" style="margin-left: 10px; visibility: hidden;" />
+                    </div>
+
+                </div>
+
+            </div>
+        }
+    </div>
+
+    <button onclick="topFunction()" id="up-botton" title="Go to top">Top</button>
+
+
+    <script>
+        var item = document.getElementsByClassName('admin-item');
+
+        var countries = [];
+        for (var i = 0; i < item.length; i++) {
+            countries.push(item[i].id);
+        }
+
+        console.log(countries);
+
+
+        window.onscroll = function () { scrollFunction() };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                document.getElementById("up-botton").style.display = "block";
+            } else {
+                document.getElementById("up-botton").style.display = "none";
+            }
+        }
+
+        function topFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+
+
+        function deleteInstrument(id) {
+            var parameters = {
+                id: id
+            };
+
+            $.post("@Url.Action("DeleteInstrument", "AdminPage")", parameters)
+                .done(function () {
+                    console.log('post done');
+                    location.reload();
+                });
+        }
+
+
+        function reveal(id) {
+            id = id.replace(/edit /g, '');
+            var nameId = "updateName " + id;
+            var priceId = "updatePrice " + id;
+            var quantityId = "updateQuantity " + id;
+            var typeId = "updateType " + id;
+            var buttonId = "confirm " + id;
+            var editId = "edit " + id;
+
+            if (document.getElementById(nameId).style.visibility === 'hidden') {
+                document.getElementById(nameId).style.visibility = 'visible';
+            } else {
+                document.getElementById(nameId).style.visibility = 'hidden';
+            }
+            if (document.getElementById(priceId).style.visibility === 'hidden') {
+                document.getElementById(priceId).style.visibility = 'visible';
+            } else {
+                document.getElementById(priceId).style.visibility = 'hidden';
+            }
+            if (document.getElementById(quantityId).style.visibility === 'hidden') {
+                document.getElementById(quantityId).style.visibility = 'visible';
+            } else {
+                document.getElementById(quantityId).style.visibility = 'hidden';
+            }
+            if (document.getElementById(typeId).style.visibility === 'hidden') {
+                document.getElementById(typeId).style.visibility = 'visible';
+            } else {
+                document.getElementById(typeId).style.visibility = 'hidden';
+            }
+            if (document.getElementById(buttonId).style.visibility === 'hidden') {
+                document.getElementById(buttonId).style.visibility = 'visible';
+            } else {
+                document.getElementById(buttonId).style.visibility = 'hidden';
+            }
+
+            if (document.getElementById(editId).value === 'Edit') {
+                document.getElementById(editId).value = 'Cancel Edit';
+                document.getElementById(editId).className = "item-button-remove"
+            } else {
+                document.getElementById(editId).value = 'Edit';
+                document.getElementById(editId).className = "item-button"
+            }
+
+        }
+
+
+        function updateInstrument(id) {
+            id = id.replace(/confirm /g, '');
+
+            var nameId = "updateName " + id;
+            var priceId = "updatePrice " + id;
+            var quantityId = "updateQuantity " + id;
+            var typeId = "updateType " + id;
+
+
+            var name = document.getElementById(nameId).value;
+            var price = document.getElementById(priceId).value;
+            var quantity = document.getElementById(quantityId).value;
+            var type = document.getElementById(typeId).value;
+
+            var parameters = {
+                id: id,
+                name: name,
+                price: price,
+                quantity: quantity,
+                type: type
+            };
+            console.log(parameters);
+            $.post("@Url.Action("UpdateInstrument", "AdminPage")", parameters)
+                .done(function () {
+                    console.log('post done');
+                    location.reload();
+                });
+        }
+
+        function searchFunction(searchText) {
+            var itemsList = document.getElementsByClassName('admin-item');
+
+            for (var i = 0; i < itemsList.length; i++) {
+                if (!itemsList[i].id.toLowerCase().includes(searchText.toLowerCase())) {
+                    itemsList[i].style.display = "none";
+                } else {
+                    itemsList[i].style.display = "block";
+                }
+            }
+        }
+
+
+
+        function autocomplete(inp, arr) {
+            /*the autocomplete function takes two arguments,
+            the text field element and an array of possible autocompleted values:*/
+            var currentFocus;
+            /*execute a function when someone writes in the text field:*/
+            inp.addEventListener("input", function (e) {
+                var a, b, i, val = this.value;
+                /*close any already open lists of autocompleted values*/
+                closeAllLists();
+                if (!val) { return false; }
+                currentFocus = -1;
+                /*create a DIV element that will contain the items (values):*/
+                a = document.createElement("DIV");
+                a.setAttribute("id", this.id + "autocomplete-list");
+                a.setAttribute("class", "autocomplete-items");
+                /*append the DIV element as a child of the autocomplete container:*/
+                this.parentNode.appendChild(a);
+                /*for each item in the array...*/
+                for (i = 0; i < arr.length; i++) {
+                    /*check if the item starts with the same letters as the text field value:*/
+                    if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                        /*create a DIV element for each matching element:*/
+                        b = document.createElement("DIV");
+                        /*make the matching letters bold:*/
+                        b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                        b.innerHTML += arr[i].substr(val.length);
+                        /*insert a input field that will hold the current array item's value:*/
+                        b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                        /*execute a function when someone clicks on the item value (DIV element):*/
+                        b.addEventListener("click", function (e) {
+                            /*insert the value for the autocomplete text field:*/
+                            inp.value = this.getElementsByTagName("input")[0].value;
+                            /*close the list of autocompleted values,
+                            (or any other open lists of autocompleted values:*/
+                            closeAllLists();
+                        });
+                        a.appendChild(b);
+                    }
+                }
+            });
+            /*execute a function presses a key on the keyboard:*/
+            inp.addEventListener("keydown", function (e) {
+                var x = document.getElementById(this.id + "autocomplete-list");
+                if (x) x = x.getElementsByTagName("div");
+                if (e.keyCode == 40) {
+                    /*If the arrow DOWN key is pressed,
+                    increase the currentFocus variable:*/
+                    currentFocus++;
+                    /*and and make the current item more visible:*/
+                    addActive(x);
+                } else if (e.keyCode == 38) { //up
+                    /*If the arrow UP key is pressed,
+                    decrease the currentFocus variable:*/
+                    currentFocus--;
+                    /*and and make the current item more visible:*/
+                    addActive(x);
+                } else if (e.keyCode == 13) {
+                    /*If the ENTER key is pressed, prevent the form from being submitted,*/
+                    e.preventDefault();
+                    if (currentFocus > -1) {
+                        /*and simulate a click on the "active" item:*/
+                        if (x) x[currentFocus].click();
+                    }
+                }
+            });
+            function addActive(x) {
+                /*a function to classify an item as "active":*/
+                if (!x) return false;
+                /*start by removing the "active" class on all items:*/
+                removeActive(x);
+                if (currentFocus >= x.length) currentFocus = 0;
+                if (currentFocus < 0) currentFocus = (x.length - 1);
+                /*add class "autocomplete-active":*/
+                x[currentFocus].classList.add("autocomplete-active");
+            }
+            function removeActive(x) {
+                /*a function to remove the "active" class from all autocomplete items:*/
+                for (var i = 0; i < x.length; i++) {
+                    x[i].classList.remove("autocomplete-active");
+                }
+            }
+            function closeAllLists(elmnt) {
+                /*close all autocomplete lists in the document,
+                except the one passed as an argument:*/
+                var x = document.getElementsByClassName("autocomplete-items");
+                for (var i = 0; i < x.length; i++) {
+                    if (elmnt != x[i] && elmnt != inp) {
+                        x[i].parentNode.removeChild(x[i]);
+                    }
+                }
+            }
+            /*execute a function when someone clicks in the document:*/
+            document.addEventListener("click", function (e) {
+                closeAllLists(e.target);
+            });
+        }
+
+        autocomplete(document.getElementById("myInput"), countries);
+
+
+
+    </script>
+
+
+
+
+
+</body>
+</html>
