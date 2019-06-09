@@ -17,16 +17,16 @@
 
     <a asp-area="" asp-controller="AddItem" asp-action="AddItem">Add</a>
 
-    <div class="admin-items-list">
+    <div class="admin-items-list2">
 
 
 
 
         @foreach (var instrument in Model)
         {
-            <div class="admin-item" id="@instrument.Name" style="display: block">
+            <div class="admin-item2" id="@instrument.Name" style="display: block">
 
-                <div class="admin-item-details">
+                <div class="admin-item-details2">
 
                     <div>
                         <label>Id: @instrument.Id</label>
@@ -69,7 +69,7 @@
 
 
     <script>
-        var item = document.getElementsByClassName('admin-item');
+        var item = document.getElementsByClassName('admin-item2');
 
         var countries = [];
         for (var i = 0; i < item.length; i++) {
@@ -184,7 +184,7 @@
         }
 
         function searchFunction(searchText) {
-            var itemsList = document.getElementsByClassName('admin-item');
+            var itemsList = document.getElementsByClassName('admin-item2');
 
             for (var i = 0; i < itemsList.length; i++) {
                 if (!itemsList[i].id.toLowerCase().includes(searchText.toLowerCase())) {

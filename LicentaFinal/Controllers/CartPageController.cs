@@ -25,7 +25,7 @@ namespace LicentaFinal.Controllers
         public CartPageController(ApplicationDbContext context)
         {
             _context = context;
-            _EmailService = emailService;
+            //_EmailService = emailService;
         }
         // GET
         public ActionResult CartPage()

@@ -13,8 +13,7 @@
 
         $(document).ready(function () {
             $("input").change(function () {
-                alert("The text has been changed.");
-                //var parameters = [$(this).attr('id'), this.value];
+
                 var parameters = {
                     Id: $(this).attr('id'),
                     CartIntrumentQuantity: this.value
@@ -26,6 +25,7 @@
                 $.post("@Url.Action("ChangeQuantity", "CartPage")", parameters)
                 .done(function () {
                     console.log('post done');
+                    location.reload();
                 });
             });
         });
@@ -37,39 +37,52 @@
         <input id="myInput" name="myInstrument" type="text" placeholder="Search.." class="search-box" onkeyup="searchFunction(this.value)">
     </div>
     
-    <div class="admin-items-list">
+    <div class="admin-items-list2">
 
         @foreach (var instrument in Model)
         {
 
-            <div class="admin-item" style="display: block">
+        <div class="admin-item2" style="display: block">
+            <img class="image" src="~/images/@instrument.InstrumentImageUrl" style="margin-bottom: 10px" />
+            <div class="admin-item-details2">
 
-                <div class="admin-item-details">
+                <div>
+                    <h5>@Html.DisplayFor(modelItem => instrument.InstrumentName)</h5>
 
-                    <div>
-                        <h5>@Html.DisplayFor(modelItem => instrument.InstrumentName)</h5>
+                    $@Html.DisplayFor(modelItem => instrument.InstrumentPrice)
+                </div>
+                <div>
+                    <label>Quantity:</label>
 
-                        $@Html.DisplayFor(modelItem => instrument.InstrumentPrice)
-                    </div>
-                    <div>
-                        <label>Quantity:</label>
+                    <input id="@instrument.Id" placeholder="@instrument.CartIntrumentQuantity" class="search-box" style="width: auto; margin-left:10px;" />
+                </div>
+                <input type="button" id="@instrument.Id" onclick="deleteInstrument(this.id)" value="Remove" class="item-button-remove" style="margin-top: 5%;" />
 
-                        <input id="@instrument.Id" placeholder="@instrument.CartIntrumentQuantity" class="search-box" style="width: auto; margin-left:10px;"/>
-                    </div>
-                    <input type="button" id="@instrument.Id" onclick="deleteInstrument(this.id)" value="Remove" class="item-button-remove" style="margin-top: 5%; " />
-
-                    <div style="margin-bottom: 3%">
-
-                    </div>
-
-
+                <div style="margin-bottom: 3%">
 
                 </div>
 
 
 
             </div>
+
+
+
+        </div>
         }
+        <div>
+            
+            @if (true)
+            {
+                int price = 0;
+                foreach(var instrPrice in Model)
+                {
+                    price += instrPrice.InstrumentPrice * instrPrice.CartIntrumentQuantity;
+                }
+                <h2>Total: @price</h2>
+            }
+
+        </div>
         <input type="submit" value="Check Out" onclick="CheckOut()" class="item-button" style="margin-bottom: 5%;" />
 
     </div>
@@ -94,7 +107,7 @@
                 function (data, status) {
                     if (status == "success") {
                         console.log("done");
-
+                        
                     }
                 });
 

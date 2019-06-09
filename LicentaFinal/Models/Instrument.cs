@@ -17,5 +17,7 @@ namespace LicentaFinal.Models
 
         public string Type { get; set; }
 
+        public string ImageUrl { get; set; }
+
     }
 }

@@ -22,5 +22,7 @@ namespace LicentaFinal.Models
         public string InstrumentType { get; set; }
 
         public int CartIntrumentQuantity { get; set; }
+
+        public string InstrumentImageUrl { get; set; }
     }
 }

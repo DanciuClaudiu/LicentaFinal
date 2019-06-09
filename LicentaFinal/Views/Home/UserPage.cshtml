@@ -12,37 +12,33 @@
     <div>
         <input id="myInput" name="myInstrument" type="text" placeholder="Search.." class="search-box" onkeyup="searchFunction(this.value)">
     </div>
+    <div class="cart-button-div"> <a asp-area="" asp-controller="CartPage" asp-action="CartPage" class="cart-button">Cart</a> </div>
+    
     <div class="admin-items-list">
-        <a asp-area="" asp-controller="CartPage" asp-action="CartPage">Cart</a>
-
 
         @foreach (var instrument in Model)
         {
             if (instrument.Quantity != 0)
             {
-            <div class="admin-item" id="@instrument.Name" style="display: block">
-
-                <div class="admin-item-details">
-
+            <div id="@instrument.Name" style="display: block" class="searchClass">
+                <div class="admin-item-details" >
+                    
+                    <img class="image" src="~/images/@instrument.ImageUrl" style="margin-bottom: 10px" />
+                    
                     <div>
-                        <label>@instrument.Name</label>
-                        @*<input type="hidden" asp-for="Name" />*@
+                        <label style="text-wrap:normal; font-weight: 700; font-size: 120%;">@instrument.Name</label>
 
                     </div>
 
-                    <div style="margin-bottom: 3%">
+                    <div style="margin-bottom: 5%">
                         <label>$@instrument.Price</label>
                     </div>
 
-                    <input type="submit" id="@instrument.Id" value="Add to Cart" onclick="Order(this)" class="item-button" style="margin-bottom: 5%;" />
-
-
+                    <input type="submit" id="@instrument.Id" value="Add to Cart" onclick="Order(this)" class="item-button" style="margin-bottom:20%;" />
 
                 </div>
-
-
-
             </div>
+
             }
         }
 
@@ -54,7 +50,11 @@
 
 
     <script>
-        var item = document.getElementsByClassName('admin-item');
+
+        
+
+
+        var item = document.getElementsByClassName('searchClass');
 
         var countries = [];
         for (var i = 0; i < item.length; i++) {
@@ -80,7 +80,7 @@
 
 
         function searchFunction(searchText) {
-            var itemsList = document.getElementsByClassName('admin-item');
+            var itemsList = document.getElementsByClassName('searchClass');
 
             for (var i = 0; i < itemsList.length; i++) {
                 if (!itemsList[i].id.toLowerCase().includes(searchText.toLowerCase())) {
@@ -89,6 +89,7 @@
                     itemsList[i].style.display = "block";
                 }
             }
+            console.log(searchText);
         }
 
         function Order(x) {

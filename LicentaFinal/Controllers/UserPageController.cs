@@ -46,7 +46,8 @@ namespace LicentaFinal.Controllers
                     InstrumentQuantity = instrument.Quantity,
                     InstrumentType = instrument.Type,
                     UserId = userId,
-                    CartIntrumentQuantity = 1
+                    CartIntrumentQuantity = 1,
+                    InstrumentImageUrl = instrument.ImageUrl
                 };
                 _context.Cart.Add(myCart);
             }

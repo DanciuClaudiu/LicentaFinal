@@ -16,6 +16,8 @@ using Microsoft.Extensions.DependencyInjection;
 using MailKit;
 using NETCore.MailKit.Extensions;
 using NETCore.MailKit.Infrastructure.Internal;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace LicentaFinal
 {
@@ -66,6 +68,8 @@ namespace LicentaFinal
             //        Security = true
             //    });
             //});
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -117,6 +121,10 @@ namespace LicentaFinal
             ApplicationUser user = await userManager.FindByEmailAsync("admin@admin.com");
             await userManager.AddToRoleAsync(user, "Admin");
         }
+    }
+
+    internal interface IFileProvider
+    {
     }
 
     public class ApplicationUser : IdentityUser
