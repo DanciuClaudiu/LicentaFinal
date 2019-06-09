@@ -33,17 +33,31 @@ namespace LicentaFinal.Controllers
             var instrument = _context.Instrument.FirstOrDefault(x => x.Id == id);
             string userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            Cart myCart = new Cart
+            var item = _context.Cart.FirstOrDefault(i => i.InstrumentId == instrument.Id);
+
+            if (item == null)
             {
-                InstrumentName = instrument.Name,
-                InstrumentPrice = instrument.Price,
-                InstrumentQuantity = instrument.Quantity,
-                InstrumentType = instrument.Type,
-                UserId = userId
-            };
+
+                Cart myCart = new Cart
+                {
+                    InstrumentId = instrument.Id,
+                    InstrumentName = instrument.Name,
+                    InstrumentPrice = instrument.Price,
+                    InstrumentQuantity = instrument.Quantity,
+                    InstrumentType = instrument.Type,
+                    UserId = userId,
+                    CartIntrumentQuantity = 1
+                };
+                _context.Cart.Add(myCart);
+            }
+            else
+            {
+                item.CartIntrumentQuantity += 1;
+                _context.SaveChanges();
+            }
 
 
-            _context.Cart.Add(myCart);
+            
             await _context.SaveChangesAsync();
 
             return View("~/Views/Home/UserPage.cshtml");

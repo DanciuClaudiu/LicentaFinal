@@ -13,6 +13,9 @@ using Microsoft.EntityFrameworkCore;
 using LicentaFinal.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MailKit;
+using NETCore.MailKit.Extensions;
+using NETCore.MailKit.Infrastructure.Internal;
 
 namespace LicentaFinal
 {
@@ -44,6 +47,25 @@ namespace LicentaFinal
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+
+            //services.AddMailKit(optionBuilder =>
+            //{
+            //    optionBuilder.UseMailKit(new MailKitOptions()
+            //    {
+            //        //get options from sercets.json
+            //        Server = Configuration["Server"],
+            //        Port = Convert.ToInt32(Configuration["Port"]),
+            //        SenderName = Configuration["SenderName"],
+            //        SenderEmail = Configuration["danciuclaudiu18@gmail.com"],
+
+            //        // can be optional with no authentication 
+            //        Account = Configuration["Account"],
+            //        Password = Configuration["Password"],
+            //        // enable ssl or tls
+            //        Security = true
+            //    });
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

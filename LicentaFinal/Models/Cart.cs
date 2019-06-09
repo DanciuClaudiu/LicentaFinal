@@ -11,6 +11,8 @@ namespace LicentaFinal.Models
 
         public string UserId { get; set; }
 
+        public int InstrumentId { get; set; }
+
         public string InstrumentName { get; set; }
 
         public int InstrumentPrice { get; set; }
@@ -18,5 +20,7 @@ namespace LicentaFinal.Models
         public int InstrumentQuantity { get; set; }
 
         public string InstrumentType { get; set; }
+
+        public int CartIntrumentQuantity { get; set; }
     }
 }

@@ -18,6 +18,8 @@
 
         @foreach (var instrument in Model)
         {
+            if (instrument.Quantity != 0)
+            {
             <div class="admin-item" id="@instrument.Name" style="display: block">
 
                 <div class="admin-item-details">
@@ -41,6 +43,7 @@
 
 
             </div>
+            }
         }
 
     </div>
