@@ -1,4 +1,4 @@
-﻿@model IEnumerable<LicentaFinal.Models.Cart>;
+﻿@model LicentaFinal.ViewModels.CartViewModel;
 @{
     ViewData["Title"] = "Cart Page";
 }
@@ -33,81 +33,110 @@
     </script>
 </head>
 <body>
-    <div>
-        <input id="myInput" name="myInstrument" type="text" placeholder="Search.." class="search-box" onkeyup="searchFunction(this.value)">
-    </div>
-    
-    <div class="admin-items-list2">
 
-        @foreach (var instrument in Model)
-        {
+    @if (Model.Cart.Any() == true)
+    {
+        <div class="admin-items-list2">
 
-        <div class="admin-item2" style="display: block">
-            <img class="image" src="~/images/@instrument.InstrumentImageUrl" style="margin-bottom: 10px" />
-            <div class="admin-item-details2">
+            @foreach (var instrument in Model.Cart)
+            {
 
-                <div>
-                    <h5>@Html.DisplayFor(modelItem => instrument.InstrumentName)</h5>
+                <div class="admin-item2" style="display: block">
+                    <img class="image" src="@instrument.InstrumentImageUrl" style="margin-bottom: 10px" />
+                    <div class="admin-item-details2">
 
-                    $@Html.DisplayFor(modelItem => instrument.InstrumentPrice)
+                        <div>
+                            <h5>@Html.DisplayFor(modelItem => instrument.InstrumentName)</h5>
+
+                            $@Html.DisplayFor(modelItem => instrument.InstrumentPrice)
+                        </div>
+                        <div>
+                            <label>Quantity:</label>
+
+                            <input id="@instrument.Id" placeholder="@instrument.CartIntrumentQuantity" class="search-box" style="width: auto; margin-left:10px;" />
+                        </div>
+                        <input type="button" id="@instrument.Id" onclick="deleteInstrument(this.id)" value="Remove" class="item-button-remove" style="margin-top: 5%;" />
+
+                        <div style="margin-bottom: 3%">
+
+                        </div>
+
+                    </div>
+
                 </div>
-                <div>
-                    <label>Quantity:</label>
+            }
+            <div>
 
-                    <input id="@instrument.Id" placeholder="@instrument.CartIntrumentQuantity" class="search-box" style="width: auto; margin-left:10px;" />
-                </div>
-                <input type="button" id="@instrument.Id" onclick="deleteInstrument(this.id)" value="Remove" class="item-button-remove" style="margin-top: 5%;" />
+                @if (true)
+                {
+                    int price = 0;
+                    foreach (var instrPrice in Model.Cart)
+                    {
+                        price += instrPrice.InstrumentPrice * instrPrice.CartIntrumentQuantity;
+                    }
+                    <h2>Total: $@price</h2>
+                }
+                <input type="submit" value="Check Out" onclick="CheckOut()" class="item-button" style="margin-bottom: 5%;" />
+            </div>
 
-                <div style="margin-bottom: 3%">
 
-                </div>
+            <div style="font-weight:800; margin-bottom:20px">You would also like</div>
 
+            <div class="admin-items-list">
 
+                @foreach (var recomendedInstrument in Model.RecomendedInstruments)
+                {
+                    if (recomendedInstrument.Quantity != 0)
+                    {
+                        <div id="@recomendedInstrument.Name" style="display: block" class="searchClass">
+                            <div class="admin-item-details">
+
+                                <img class="image" src="@recomendedInstrument.ImageUrl" style="margin-bottom: 10px" />
+
+                                <div>
+                                    <label style="text-wrap:normal; font-weight: 700; font-size: 120%;">@recomendedInstrument.Name</label>
+
+                                </div>
+
+                                <div style="margin-bottom: 5%">
+                                    <label>$@recomendedInstrument.Price</label>
+                                </div>
+
+                                @*<input type="submit" id="@recomendedInstrument.Id" value="Add to Cart" onclick="Order(this)" class="item-button" style="margin-bottom:20%;" />*@
+
+                            </div>
+                        </div>
+
+                    }
+                }
 
             </div>
 
 
-
         </div>
-        }
-        <div>
-            
-            @if (true)
-            {
-                int price = 0;
-                foreach(var instrPrice in Model)
-                {
-                    price += instrPrice.InstrumentPrice * instrPrice.CartIntrumentQuantity;
-                }
-                <h2>Total: @price</h2>
-            }
+        <button onclick="topFunction()" id="up-botton" title="Go to top">Top</button>
+    }
+    else
+    {
+        <div style="margin-left:32%; margin-top:30%; font-size:50px">Your cart is emty!</div>
+    }
 
-        </div>
-        <input type="submit" value="Check Out" onclick="CheckOut()" class="item-button" style="margin-bottom: 5%;" />
-
-    </div>
-    <div>
-
-       
-    
-    </div>
-
-    <button onclick="topFunction()" id="up-botton" title="Go to top">Top</button>
-
-
-
-
-
-
-    <script>
         
+
+
+
+
+
+
+        <script>
+
 
         function CheckOut() {
             $.post("/CartPage/CheckOut",
                 function (data, status) {
                     if (status == "success") {
                         console.log("done");
-                        
+
                     }
                 });
 
@@ -158,8 +187,8 @@
         }
 
 
-    </script>
+        </script>
 
 
-</body>
+    </body>
 </html>

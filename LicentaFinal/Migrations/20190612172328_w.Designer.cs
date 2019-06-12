@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace LicentaFinal.Data.Migrations
+namespace LicentaFinal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190609092402_q")]
-    partial class q
+    [Migration("20190612172328_w")]
+    partial class w
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -78,7 +78,11 @@ namespace LicentaFinal.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("CartIntrumentQuantity");
+
                     b.Property<int>("InstrumentId");
+
+                    b.Property<string>("InstrumentImageUrl");
 
                     b.Property<string>("InstrumentName");
 
@@ -101,6 +105,8 @@ namespace LicentaFinal.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ImageUrl");
+
                     b.Property<string>("Name");
 
                     b.Property<int>("Price");
@@ -112,6 +118,29 @@ namespace LicentaFinal.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Instrument");
+                });
+
+            modelBuilder.Entity("LicentaFinal.Models.Sales", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("InstrumentPrice");
+
+                    b.Property<string>("IntrumentId");
+
+                    b.Property<DateTime>("PurchaseDate");
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<Guid>("SaleId");
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Sales");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

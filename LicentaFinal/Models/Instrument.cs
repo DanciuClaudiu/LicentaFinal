@@ -19,5 +19,7 @@ namespace LicentaFinal.Models
 
         public string ImageUrl { get; set; }
 
+
+
     }
 }

@@ -16,5 +16,6 @@ namespace LicentaFinal.Data
 
         public DbSet<LicentaFinal.Models.Instrument> Instrument { get; set; }
         public DbSet<LicentaFinal.Models.Cart> Cart { get; set; }
+        public DbSet<LicentaFinal.Models.Sales> Sales { get; set; }
     }
 }

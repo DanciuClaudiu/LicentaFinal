@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using LicentaFinal.Models;
+using LicentaFinal.ViewModels;
 using LicentaFinal.Data;
 using System.Collections;
 using System.Net.Mail;
@@ -12,7 +13,6 @@ using System.Net;
 using NETCore.MailKit.Core;
 using MimeKit;
 
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace LicentaFinal.Controllers
 {
@@ -32,9 +32,104 @@ namespace LicentaFinal.Controllers
         {
 
             var order = _context.Cart.Where(x => x.UserId.Equals(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)));
+            int minPrice = 1000000000, maxPrice = 0, maxRecomandations = 0;
 
-            return View("~/Views/Home/CartPage.cshtml", order);
+
+            var instrumements = _context.Instrument.Where(x => x.Id >= 0);
+            var r = new Random((int)DateTime.Now.Ticks);
+            var shuffledList = instrumements.Select(x => new { Number = r.Next(), Item = x }).OrderBy(x => x.Number).Select(x => x.Item);
+
+
+
+
+            List<string> instrumentTypes = new List<string>();
+
+            List<int> recomendedInstrumentIDs = new List<int>();
+            List<Instrument> recomendedInstruments = new List<Instrument>();
+
+            foreach (var instrument in order)
+            {
+                if (!instrumentTypes.Contains(instrument.InstrumentType))
+                {
+                    instrumentTypes.Add(instrument.InstrumentType);
+                }
+                if (instrument.InstrumentPrice < minPrice) minPrice = instrument.InstrumentPrice;
+                if (instrument.InstrumentPrice > maxPrice) maxPrice = instrument.InstrumentPrice;
+                
+            }
+            
+            foreach (var instrument in shuffledList)
+            {
+                if(!recomendedInstrumentIDs.Contains(instrument.Id) && instrument.Price >= minPrice && instrument.Price <= maxPrice && isInCart(instrument.Id) == false && instrumentTypes.Contains(instrument.Type))
+                {
+                    recomendedInstrumentIDs.Add(instrument.Id);
+                    maxRecomandations++;
+
+                }
+                if (maxRecomandations == 4) break;
+            }
+
+            foreach(int i in recomendedInstrumentIDs)
+            {
+                var instr = _context.Instrument.Where(x => x.Id.Equals(i));
+                foreach(var j in instr) recomendedInstruments.Add(j);
+            }
+
+            if (recomendedInstruments.Any() == true)
+            {
+                CartViewModel model = new CartViewModel
+                {
+                    Cart = order,
+                    RecomendedInstruments = recomendedInstruments
+                };
+
+                return View("~/Views/Home/CartPage.cshtml", model);
+            }
+            else
+            {
+                foreach (var instrument in shuffledList)
+                {
+
+                    recomendedInstrumentIDs.Add(instrument.Id);
+                    maxRecomandations++;
+
+                    if (maxRecomandations == 4) break;
+                }
+
+                foreach (int i in recomendedInstrumentIDs)
+                {
+                    var instr = _context.Instrument.Where(x => x.Id.Equals(i));
+                    foreach (var j in instr) recomendedInstruments.Add(j);
+                }
+
+                CartViewModel model = new CartViewModel
+                {
+                    Cart = order,
+                    RecomendedInstruments = recomendedInstruments
+                };
+
+                return View("~/Views/Home/CartPage.cshtml", model);
+            }
+                
+
+            
         }
+
+
+
+
+        private bool isInCart(int instrumentId)
+        {
+            var order = _context.Cart.Where(x => x.UserId.Equals(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)));
+
+            foreach(var ord in order)
+            {
+                if (ord.InstrumentId == instrumentId) return true;
+            }
+            return false;
+        }
+
+
         [HttpPost]
         public void CheckOut()
         {
@@ -53,8 +148,24 @@ namespace LicentaFinal.Controllers
 
                         _context.SaveChanges();
                         _context.Cart.Remove(order);
+
+                        Sales sale = new Sales
+                        {
+                            UserId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier),
+                            IntrumentId = order.InstrumentId,
+                            InstrumentPrice = order.InstrumentPrice,
+                            Quantity = order.CartIntrumentQuantity,
+                            SaleId = Guid.NewGuid(),
+                            PurchaseDate = DateTime.Now
+                        };
+
+                        _context.Sales.Add(sale);
+
+
                     }
                 }
+
+                
 
             }
             _context.SaveChanges();

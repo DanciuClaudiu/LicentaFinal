@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using LicentaFinal.Models;
 using LicentaFinal.Data;
-//using LicentaFinal.ViewModels;
 
 namespace LicentaFinal.Controllers
 {

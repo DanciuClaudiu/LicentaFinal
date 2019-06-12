@@ -14,9 +14,8 @@
     </div>
 
 
-    <br />
-    <a asp-area="" asp-controller="AddItem" asp-action="AddItem" class="item-button">Add</a>
-    <a asp-area="" asp-controller="AdminStatistics" asp-action="AdminStatistics" class="item-button">Stats</a>
+    <br/>
+    <a asp-area="" asp-controller="AdminPage" asp-action="AdminPage" class="item-button">Back</a>
 
     <div class="admin-items-list2">
 
@@ -35,29 +34,20 @@
 
                     <div>
                         <label>Name: @instrument.Name</label>
-                        <input type="text" id="updateName @instrument.Id" style="visibility: hidden" />
 
                     </div>
 
                     <div>
-                        <label>Price: $@instrument.Price</label>
-                        <input type="text" id="updatePrice @instrument.Id" style="visibility: hidden" />
+                        
+                        <label>Sold $@instrument.Price</label>
                     </div>
 
                     <div>
                         <label>Quantity: @instrument.Quantity</label>
-                        <input type="text" id="updateQuantity @instrument.Id" style="visibility: hidden" />
                     </div>
 
                     <div style="margin-bottom: 3%">
                         <label>Type: @instrument.Type</label>
-                        <input type="text" id="updateType @instrument.Id" style="visibility: hidden" />
-                    </div>
-
-                    <div>
-                        <input type="button" id="@instrument.Id" onclick="deleteInstrument(this.id)" value="Remove" class="item-button-remove" style="margin-bottom: 5%; " />
-                        <input type="button" value="Edit" id="edit @instrument.Id" onclick="reveal(this.id)" class="item-button" style="margin-left: 10px" />
-                        <input type="button" value="Confirm" id="confirm @instrument.Id" onclick="updateInstrument(this.id)" class="item-button" style="margin-left: 10px; visibility: hidden;" />
                     </div>
 
                 </div>

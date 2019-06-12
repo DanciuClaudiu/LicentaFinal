@@ -4,16 +4,14 @@ using LicentaFinal.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace LicentaFinal.Data.Migrations
+namespace LicentaFinal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190608145335_initial")]
-    partial class initial
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -78,6 +76,12 @@ namespace LicentaFinal.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("CartIntrumentQuantity");
+
+                    b.Property<int>("InstrumentId");
+
+                    b.Property<string>("InstrumentImageUrl");
+
                     b.Property<string>("InstrumentName");
 
                     b.Property<int>("InstrumentPrice");
@@ -86,7 +90,7 @@ namespace LicentaFinal.Data.Migrations
 
                     b.Property<string>("InstrumentType");
 
-                    b.Property<int>("UserId");
+                    b.Property<string>("UserId");
 
                     b.HasKey("Id");
 
@@ -99,6 +103,8 @@ namespace LicentaFinal.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ImageUrl");
+
                     b.Property<string>("Name");
 
                     b.Property<int>("Price");
@@ -110,6 +116,29 @@ namespace LicentaFinal.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Instrument");
+                });
+
+            modelBuilder.Entity("LicentaFinal.Models.Sales", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("InstrumentPrice");
+
+                    b.Property<int>("IntrumentId");
+
+                    b.Property<DateTime>("PurchaseDate");
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<Guid>("SaleId");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Sales");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
